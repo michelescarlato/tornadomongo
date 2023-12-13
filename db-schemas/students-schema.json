@@ -1,0 +1,17 @@
+{
+  "title": "Student",
+  "required": [
+    "_id",
+    "name",
+    "surname",
+    "email",
+    "nationality"
+  ],
+  "properties": {
+    "_id": { "bsonType": "objectId" },
+    "name": { "bsonType": "string" },
+    "surname": { "bsonType": "string" },
+    "email": { "bsonType": "string" },
+    "nationality" : { "bsonType": "string" }
+  }
+}

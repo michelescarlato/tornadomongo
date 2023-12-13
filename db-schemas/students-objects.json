@@ -1,0 +1,19 @@
+{
+    "students": [
+        {
+            "name": "Luigi",
+            "surname": "Rossi",
+            "email": "luigi.rossi@unibo.it"
+        },
+        {
+            "name": "Olga",
+            "surname": "Stankovic",
+            "email": "olga.stankovic@msu.ru"
+        },
+        {
+            "name": "Paula",
+            "surname": "Ortiz",
+            "email": "paula.ortiz@umu.es"
+        }
+    ]
+}

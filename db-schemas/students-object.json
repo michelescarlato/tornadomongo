@@ -1,0 +1,9 @@
+{
+    "students": [
+        {
+            "name": "Luigi",
+            "surname": "Rossi",
+            "email": "luigi.rossi@unibo.it"
+        }
+    ]
+}
