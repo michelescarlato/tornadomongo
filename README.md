@@ -1,10 +1,30 @@
 # Tornado students application based on mongoDB
 
-This application relies on MongoDB, which can be run together with mongo-express using the docker-compose.yml file:
+## Running MongoDB and Mongo-Express
 
+This application relies on MongoDB, which can be run together with mongo-express using the docker-compose.yml file:
 ```bash
 docker-compose up
 ```
+The docker-compose.yaml file uses static ip addresses.
+(this workaround has been required since there has been issues with tornado.testing using the port forwarding on the localhost) 
+
+The MongoDB URI is hardcoded [here](https://github.com/michelescarlato/tornadomongo/blob/main/students_tornado.py#L13).
+User and password are defined in the [docker-compose.yml](https://github.com/michelescarlato/tornadomongo/blob/main/docker-compose.yml#L12-L13) file.
+
+In case you want to use a different IP schema, you can modify the IPAM configuration changing the [subnet](https://github.com/michelescarlato/tornadomongo/blob/main/docker-compose.yml#L8),
+and modifying the [mongo ip address in the container](https://github.com/michelescarlato/tornadomongo/blob/main/docker-compose.yml#L22), as well as in the [mongo-express environment](https://github.com/michelescarlato/tornadomongo/blob/main/docker-compose.yml#L32),
+and the [mongo-express ip address](https://github.com/michelescarlato/tornadomongo/blob/main/docker-compose.yml#L35).
+ 
+
+To access **mongo-express**:
+```
+http://localhost:8000
+```
+After login with _admin/pass_ you will be able to manage the mongodb instance.
+
+
+## Running the tornado_student python application
 
 To isolate the environment, using Python3.10 as interpreter, I used a python virtual environment:
 
@@ -19,46 +39,42 @@ To install the required dependencies:
 pip3 -r requirements.txt
 ```
 
-Despite mongo is accessible also from the localhost, I used the container IP address to connect to mongo.
-Switching to localhost I had issues running the tests written with `tornado.testing`. 
-To retrieve the container ip:
-```bash
-docker inspect   -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $MONGODB_CONTAINER_NAME
-```
-
-MongoDB URI is hardcoded [here](https://github.com/michelescarlato/tornadomongo/blob/main/students_tornado.py#L13).
-User and password are defined in the [docker-compose.yml](https://github.com/michelescarlato/tornadomongo/blob/main/docker-compose.yml#L12-L13) file.
-
-To access **mongo-express**:
-```
-http://localhost:8000
-```
-Login with _admin/pass_.
-
-
 To run the _**students_tornado**_ application:
 ```bash
 python3 students_tornado.py
 ```
 
-Populate the DB with one student:
+## Operations
+
+Populate the DB with one student, using the **_POST_** method and the json as a body:
 ```bash
 curl -X "POST" "http://localhost:9000/" \
     -H 'Accept: application/json' \
     -H 'Content-Type: application/json; charset=utf-8' \
     -d $'{
-        "name": "Jane",
-        "surname": "Doe",
-        "email": "jdoe@example.com"        
+        "name": "Lisa",
+        "surname": "Kruger",
+        "email": "lkruger@example.com"        
     }'
 ```
 
-Get the student list, e.g., from the browser with:
+**GET** the student list, e.g., from the browser with:
 ```
 http://localhost:9000/
 ```
 
-If you want to modify the Student information, grab the __id_ from the browser's output and append it to the url, using the PUT method , e.g., in _curl_: 
+or using curl:
+```bash
+curl -X "GET" "http://localhost:9000/"
+```
+
+or **GET** a specific student using its __id_:
+```bash
+curl -X "GET" "http://localhost:9000/657a73b5f39a9686a65944e6"
+```
+
+If you want to modify the student information, grab the __id_ from one of the previous output,
+append it to the url, using the **PUT** method , e.g., in _curl_ and pass the new parameters as a json: 
 ```bash
 curl -X "PUT" "http://localhost:9000/65797ca9bbdf7a1fb9b54022" \
     -H 'Accept: application/json' \
@@ -70,11 +86,10 @@ curl -X "PUT" "http://localhost:9000/65797ca9bbdf7a1fb9b54022" \
     }'
 ```
 
-If you want to try the **_delete_** function, you can delete the created student, using the "_id" as a parameter in the next _DELETE_:
+If you want to try the **_delete_** function, you can delete the created student, using the __id_ as a parameter in the next _DELETE_:
 ```bash
-curl -X "DELETE" "http://localhost:9000/65797ca9bbdf7a1fb9b54022"
+curl -X "DELETE" "http://localhost:9000/657a73d6f39a9686a65944e7"
 ```
-
 
 Tests written with `tornado.tests` can be run from pycharm, but to be run from shell they should be on the same directory of students_tornado.py (because it is imported as a module).
 
