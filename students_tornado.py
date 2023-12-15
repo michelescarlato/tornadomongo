@@ -11,6 +11,8 @@ from bson import ObjectId
 from operator import itemgetter
 import os
 from dotenv import load_dotenv
+from pathlib import Path
+import time
 
 
 def create_logger(name):
@@ -18,7 +20,8 @@ def create_logger(name):
         fmt='%(asctime)s %(levelname)-8s %(message)s',
         datefmt='%Y-%m-%d %H:%M:%S'
     )
-    file_handler = logging.FileHandler('logs/students_tornado.log', mode='w')
+    time_string = time.strftime("%Y%m%d-%H%M%S")
+    file_handler = logging.FileHandler(f'logs/students_tornado_{time_string}.log', mode='w')
     file_handler.setFormatter(formatter)
 
     logger_ = logging.getLogger(name)
@@ -29,6 +32,7 @@ def create_logger(name):
 
 
 enable_pretty_logging()
+Path("logs").mkdir(parents=True, exist_ok=True)
 logger = create_logger('tornado.access')
 load_dotenv()
 uri = os.getenv('URI')
