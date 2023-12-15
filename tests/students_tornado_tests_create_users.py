@@ -5,8 +5,11 @@ from tornado.web import Application
 from students_tornado import MainHandler
 from tornado.testing import AsyncHTTPTestCase
 import tornado.web
+import os
+from dotenv import load_dotenv
 
-uri = 'mongodb://root:example@172.20.0.2:27017/'
+load_dotenv()
+uri = os.getenv('URI')
 client = motor.motor_asyncio.AsyncIOMotorClient(uri)
 db = client.universityTests
 

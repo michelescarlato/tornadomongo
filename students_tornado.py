@@ -9,8 +9,11 @@ from bson import ObjectId, json_util
 import json
 import configparser
 from operator import itemgetter
+import os
+from dotenv import load_dotenv
 
-uri = 'mongodb://root:example@172.20.0.2:27017/'
+load_dotenv()
+uri = os.getenv('URI')
 client = motor.motor_asyncio.AsyncIOMotorClient(uri)
 db = client.university
 
