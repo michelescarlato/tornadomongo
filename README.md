@@ -6,27 +6,21 @@ This application relies on MongoDB, which can be run together with mongo-express
 ```bash
 docker-compose up
 ```
-The docker-compose.yaml file uses static ip addresses.
-(this workaround has been required since there has been issues with tornado.testing using the port forwarding on the localhost) 
+Mongodb and mongo-express are accessible from the localhost since port forwarding is enabled.
+User and password used by mongo-express to access mongoDB are defined in the [docker-compose.yml](https://github.com/michelescarlato/tornadomongo/blob/main/docker-compose.yml#L12-L13)  environments.
 
-The MongoDB URI is hardcoded [here](https://github.com/michelescarlato/tornadomongo/blob/main/students_tornado.py#L13).
-User and password are defined in the [docker-compose.yml](https://github.com/michelescarlato/tornadomongo/blob/main/docker-compose.yml#L12-L13) file.
+In case you want to use a different IP address, you can modify the mongoDB URI defined in the [.env](https://github.com/michelescarlato/tornadomongo/blob/main/.env#L3) file.
 
-In case you want to use a different IP schema, you can modify the IPAM configuration changing the [subnet](https://github.com/michelescarlato/tornadomongo/blob/main/docker-compose.yml#L8),
-and modifying the [mongo ip address in the container](https://github.com/michelescarlato/tornadomongo/blob/main/docker-compose.yml#L22), as well as in the [mongo-express environment](https://github.com/michelescarlato/tornadomongo/blob/main/docker-compose.yml#L32),
-and the [mongo-express ip address](https://github.com/michelescarlato/tornadomongo/blob/main/docker-compose.yml#L35).
- 
-
-To access **mongo-express**:
+Accessing **mongo-express**:
 ```
 http://localhost:8000
 ```
-After login with _admin/pass_ you will be able to manage the mongodb instance.
+After login with _admin/pass_ you will be able to manage the mongodb instance, in case you want to use a UI to check inserted, modified and deleted data.
 
 
 ## Running the tornado_student python application
 
-To isolate the environment, using Python3.10 as interpreter, I used a python virtual environment:
+To isolate the environment I used a python virtual environment using Python3.10 as interpreter,:
 
 ```bash
 python3 -m venv venv
@@ -96,6 +90,3 @@ Tests written with `tornado.tests` can be run from pycharm, but to be run from s
 **Postman** collection can be imported using Postman -> import -> [Collection URL](https://api.postman.com/collections/718114-14bde538-1ff7-4962-957c-4c96e59c99a4?access_key=PMAT-01HHJ3EDGRC30VTC9940XSN83W)
 
 **Apache JMeter** .jmx file can be imported from File -> open -> [jmeter Thread Group.jmx](https://github.com/michelescarlato/tornadomongo/blob/main/tests/jmeter_Thread%20Group.jmx)
-
-
-
