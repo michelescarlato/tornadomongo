@@ -1,9 +1,11 @@
 import asyncio
+import logging
+
 import tornado.ioloop
 import tornado.web
 import tornado.escape
 from tornado.log import enable_pretty_logging
-from logging import getLogger, FileHandler, INFO
+from logging import getLogger, FileHandler, INFO, basicConfig, Formatter
 import motor.motor_asyncio
 import motor.motor_tornado
 from tornado.httpclient import AsyncHTTPClient
@@ -12,13 +14,24 @@ from operator import itemgetter
 import os
 from dotenv import load_dotenv
 
-enable_pretty_logging()
-log_file = "students_tornado.log"
-handler = FileHandler("logs/"+log_file)
-logger = getLogger("tornado.access")  # per-request logging for tornado's HTTP servers
-logger.addHandler(handler)
-logger.setLevel(INFO)
 
+def create_logger(name):
+    formatter = logging.Formatter(
+        fmt='%(asctime)s %(levelname)-8s %(message)s',
+        datefmt='%Y-%m-%d %H:%M:%S'
+    )
+    file_handler = logging.FileHandler('logs/students_tornado.log', mode='w')
+    file_handler.setFormatter(formatter)
+
+    logger_ = logging.getLogger(name)
+    logger_.setLevel(logging.INFO)
+    logger_.addHandler(file_handler)
+
+    return logger_
+
+
+enable_pretty_logging()
+logger = create_logger('tornado.access')
 load_dotenv()
 uri = os.getenv('URI')
 client = motor.motor_asyncio.AsyncIOMotorClient(uri)
