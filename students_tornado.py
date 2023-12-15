@@ -1,11 +1,9 @@
 import asyncio
 import logging
-
 import tornado.ioloop
 import tornado.web
 import tornado.escape
 from tornado.log import enable_pretty_logging
-from logging import getLogger, FileHandler, INFO, basicConfig, Formatter
 import motor.motor_asyncio
 import motor.motor_tornado
 from tornado.httpclient import AsyncHTTPClient
