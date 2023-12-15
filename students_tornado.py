@@ -51,8 +51,9 @@ class MainHandler(tornado.web.RequestHandler):
         else:
             students = await self.settings["db"]["students"].find().to_list(1000)
             self.set_status(200)
-            logger.info(f"Get student list from the db. Total number of students {len(students[0])}.")
-            self.write(tornado.escape.json_encode({"students": students}))  # escape characters
+            logger.info(f"Get student list from the db. Total number of students {len(students)}.")
+            students = tornado.escape.json_encode({"students": students})
+            self.write(students)
         await self.finish()
 
     async def post(self):
