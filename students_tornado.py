@@ -3,6 +3,7 @@ import logging
 import tornado.ioloop
 import tornado.web
 import tornado.escape
+import tornado.autoreload
 from tornado.log import enable_pretty_logging
 import motor.motor_asyncio
 import motor.motor_tornado
@@ -37,7 +38,7 @@ logger = create_logger('tornado.access')
 load_dotenv()
 uri = os.getenv('URI')
 client = motor.motor_asyncio.AsyncIOMotorClient(uri)
-db = client.university
+db = client.university  # dot notation - alternatively: db = client["university"] --> bracket notation
 
 
 class MainHandler(tornado.web.RequestHandler):
@@ -61,7 +62,8 @@ class MainHandler(tornado.web.RequestHandler):
         await self.finish()
 
     async def post(self):
-        student = tornado.escape.json_decode(self.request.body)
+        student = tornado.escape.json_decode(self.request.body)  # equivalents to json.loads ->
+        # return Python objects of the given JSON strings.
         student["_id"] = str(ObjectId())
         logger.info(f"Adding student with id: {str(student['_id'])}")
         url = f'https://api.nationalize.io/?name={student["name"]}'
@@ -110,7 +112,7 @@ async def main():
     application = tornado.web.Application([
         (r"/", MainHandler),
         (r"/(?P<student_id>\w+)", MainHandler)
-    ], db=db)
+    ], db=db, autoreload=True)
     application.listen(9000)
     await asyncio.Event().wait()
 
